@@ -1,0 +1,470 @@
+1) #include <iostream>
+using namespace std;
+void f(int n) {
+    if (n == 1) {
+        cout << "1\n";
+    } else {
+        for (int i = 1; i <= n; i++) {
+            cout << i;
+        }
+        cout << "\n";
+        f(n - 1);
+        for (int i =1; i <= n; i++) {
+            cout << i;
+        }
+        cout << "\n";
+    }
+}
+
+int main() {
+    f(5);
+    return 0;
+}
+
+
+
+
+
+2) #include <iostream>
+#include <string>
+using namespace std;
+class Conference {
+private:
+    string name_;
+    string location_;
+    string* speakers_;
+    int numSpeakers_;
+    int maxSpeakers_;
+    int numAttendees_;
+public:
+    // Конструкторы
+    Conference() {
+        name_ = "";
+        location_ = "";
+        numSpeakers_ = 0;
+        maxSpeakers_ = 10;
+        speakers_ = new string[maxSpeakers_];
+        numAttendees_ = 0;
+    }
+    Conference(string name, string location, int numAttendees) {
+        name_ = name;
+        location_ = location;
+        numSpeakers_ = 0;
+        maxSpeakers_ = 10;
+        speakers_ = new string[maxSpeakers_];
+        numAttendees_ = numAttendees;
+    }
+    // Деструктор
+    ~Conference() {
+        delete[] speakers_;
+    }
+    // Методы
+    void addSpeaker(string speaker) {
+        if (numSpeakers_ == maxSpeakers_) {
+            // Увеличиваем размер массива вдвое
+            maxSpeakers_ *= 2;
+            string* newSpeakers = new string[maxSpeakers_];
+            for (int i = 0; i < numSpeakers_; i++) {
+                newSpeakers[i] = speakers_[i];
+            }
+            delete[] speakers_;
+            speakers_ = newSpeakers;
+        }
+        speakers_[numSpeakers_] = speaker;
+        numSpeakers_++;
+    }
+    void printSpeakers() {
+        cout << "Speakers: ";
+        for (int i = 0; i < numSpeakers_; i++) {
+            cout << speakers_[i] << ", ";
+        }
+        cout << endl;
+    }
+    // Перегруженные операторы
+    bool operator==(const Conference& other) const {
+        return name_ == other.name_ && location_ == other.location_ && numAttendees_ == other.numAttendees_;
+    }
+    bool operator!=(const Conference& other) const {
+        return !(*this == other);
+    }
+};
+
+int main() {
+    Conference conf1("Programmer", "Saratov", 1000);
+    Conference conf2("Designer", "Moskow", 500);
+    conf1.addSpeaker("Elen Johns");
+    conf1.addSpeaker("Norman Ridus");
+    conf2.addSpeaker("Stiven Wilson");
+    conf2.addSpeaker("John Smidth");
+    conf1.printSpeakers();
+    conf2.printSpeakers();
+    if (conf1 == conf2) {
+        cout << "conferences same" << endl;
+    } else {
+        cout << "conferences different" << endl;
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+3)#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct Student {
+    string surname;
+    string name;
+    int score1;
+    int score2;
+    int score3;
+};
+
+bool compare(const Student& s1, const Student& s2) {
+    int count1 = 0, count2 = 0;
+    if (s1.score1 >= 65) count1++;
+    if (s1.score2 >= 65) count1++;
+    if (s1.score3 >= 65) count1++;
+    if (s2.score1 >= 65) count2++;
+    if (s2.score2 >= 65) count2++;
+    if (s2.score3 >= 65) count2++;
+    if (count1 == count2) {
+        if (s1.surname == s2.surname) {
+            return false;
+        }
+        return s1.surname < s2.surname;
+    }
+    return count1 > count2;
+}
+
+int main() {
+    ifstream in("input.txt");
+    ofstream out("output.txt");
+
+    vector<Student> students;
+
+    while (!in.eof()) {
+        Student s;
+        in >> s.surname >> s.name >> s.score1 >> s.score2 >> s.score3;
+        students.push_back(s);
+    }
+
+    sort(students.begin(), students.end(), compare);
+
+    for (int i = 0; i < students.size(); i++) {
+        out << students[i].surname << " " << students[i].name << " " << students[i].score1 << " " << students[i].score2 << " " << students[i].score3 << endl;
+    }
+
+    in.close();
+    out.close();
+    return 0;
+} 
+
+
+
+
+
+
+
+
+
+4)#include <iostream>
+#include <stack>
+#include <queue>
+#include <cmath>
+using namespace std;
+
+bool isPrime(int n) {
+    if (n <= 1) {
+        return false;
+    }
+    for (int i = 2; i <= sqrt(n); ++i) {
+        if (n % i == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool isPerfectSquare(int n) {
+    if (n < 0) {
+        return false;
+    }
+    int root = sqrt(n);
+    return root * root == n;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    stack<int> primes;
+    queue<int> squares;
+    int otherCount = 0;
+
+    for (int i = 0; i < n; i++) {
+        int num;
+        cin >> num;
+        if (isPrime(num)) {
+            primes.push(num);
+        } else if (isPerfectSquare(num)) {
+            squares.push(num);
+        } else {
+            otherCount++;
+        }
+    }
+
+    while (!primes.empty()) {
+        cout << primes.top() << " ";
+        primes.pop();
+    }
+    cout << endl;
+
+    while (!squares.empty()) {
+        cout << squares.front() << " ";
+        squares.pop();
+    }
+    cout << endl;
+
+    cout << otherCount << endl;
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+5)#include <iostream>
+#include <string>
+#include <vector>
+#include <list>
+using namespace std;
+
+class Conference {
+private:
+    string name_;
+    string location_;
+    string* speakers_;
+    int numSpeakers_;
+    int maxSpeakers_;
+    int numAttendees_;
+public:
+    // Конструкторы
+    Conference() {
+        name_ = "";
+        location_ = "";
+        numSpeakers_ = 0;
+        maxSpeakers_ = 10;
+        speakers_ = new string[maxSpeakers_];
+        numAttendees_ = 0;
+    }
+    Conference(string name, string location, int numAttendees) {
+        name_ = name;
+        location_ = location;
+        numSpeakers_ = 0;
+        maxSpeakers_ = 10;
+        speakers_ = new string[maxSpeakers_];
+        numAttendees_ = numAttendees;
+    }
+    // Деструктор
+    ~Conference() {
+        delete[] speakers_;
+    }
+    // Методы
+    void addSpeaker(string speaker) {
+        if (numSpeakers_ == maxSpeakers_) {
+            // Увеличиваем размер массива вдвое
+            maxSpeakers_ *= 2;
+            string* newSpeakers = new string[maxSpeakers_];
+            for (int i = 0; i < numSpeakers_; i++) {
+                newSpeakers[i] = speakers_[i];
+            }
+            delete[] speakers_;
+            speakers_ = newSpeakers;
+        }
+        speakers_[numSpeakers_] = speaker;
+        numSpeakers_++;
+    }
+    void printSpeakers() {
+        cout << "Speakers: ";
+        for (int i = 0; i < numSpeakers_; i++) {
+            cout << speakers_[i] << ", ";
+        }
+        cout << endl;
+    }
+    // Перегруженные операторы
+    bool operator==(const Conference& other) const {
+        return name_ == other.name_ && location_ == other.location_ && numAttendees_ == other.numAttendees_;
+    }
+    bool operator!=(const Conference& other) const {
+        return !(*this == other);
+    }
+};
+
+int main() {
+    vector<Conference> confVec;
+    list<Conference> confList;
+
+    // Создаём конференции
+    Conference conf1("Programmer", "Saratov", 1000);
+    Conference conf2("Designer", "Moskow", 500);
+    Conference conf3("Marketing", "St. Petersburg", 750);
+    Conference conf4("IT", "Kazan", 800);
+
+    // Добавляем спикеров
+    conf1.addSpeaker("Elen Johns");
+    conf1.addSpeaker("Norman Ridus");
+    conf2.addSpeaker("Stiven Wilson");
+    conf2.addSpeaker("John Smidth");
+    conf3.addSpeaker("Maria Ivanova");
+    conf4.addSpeaker("Alexey Petrov");
+
+    // Добавляем конференции в вектор и список
+    confVec.push_back(conf1);
+    confVec.push_back(conf2);
+    confList.push_back(conf3);
+    confList.push_back(conf4);
+
+    // Удаляем конференции, не удовлетворяющие условию
+    for (auto it = confVec.begin(); it != confVec.end(); ) {
+        if (it->printSpeakers(), it->numAttendees_ < 800) {
+            it = confVec.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    for (auto it = confList.begin(); it != confList.end(); ) {
+        if (it->printSpeakers(), it->location_ != "Moskow") {
+            it = confList.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    // Считаем количество конференций определённой тематики
+    int numITConf = 0;
+    for (auto it = confVec.begin(); it != confVec.end(); ++it) {
+        if (it->printSpeakers(), it->name_ == "IT") {
+            numITConf++;
+        }
+    }
+    for (auto it = confList.begin(); it != confList.end(); ++it) {
+        if (it->printSpeakers(), it->name_ == "IT") {
+            numITConf++;
+        }
+    }
+    cout << "Number of IT conferences: " << numITConf << endl;
+
+    return 0;
+}
+
+
+
+
+
+
+6)#include <iostream>
+#include <string>
+#include <sstream>
+#include <set>
+#include <algorithm>
+using namespace std;
+set<string> split_string_to_set(const string& str) {
+    istringstream iss(str);
+    set<string> words;
+    string word;
+    while (iss >> word) {
+        transform(word.begin(), word.end(), word.begin(), ::tolower);
+        words.insert(word);
+    }
+    return words;
+}
+
+int main() {
+    string str1, str2;
+    cout << "1 str: ";
+    getline(cin, str1);
+    cout << "2 str: ";
+    getline(cin, str2);
+
+    set<string> words1 = split_string_to_set(str1);
+    set<string> words2 = split_string_to_set(str2);
+
+    set<string> common_words, unique_words;
+
+    set_intersection(words1.begin(), words1.end(), words2.begin(), words2.end(),
+                          inserter(common_words, common_words.begin()));
+    set_symmetric_difference(words1.begin(), words1.end(), words2.begin(), words2.end(),
+                                  inserter(unique_words, unique_words.begin()));
+
+    cout << "Slova, kotorie est' v obeih strokah odnovremenno:" << "\t";
+    for (const auto& word : common_words) {
+        cout << word << ' ';
+    }
+    cout << endl;
+
+    cout << "Slova, kotorie est' tolko v odnoi iz dvuh strok:" << "\t";
+    for (const auto& word : unique_words) {
+        cout << word << ' ';
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+
+
+
+7)#include <iostream>
+#include <string>
+#include <map>
+#include <algorithm>
+#include <cctype>
+using namespace std;
+char most_letter(const string& input) {
+    map<char, int> letter_count;
+    bool new_word = true;
+
+    for (char c : input) {
+        if (c == ' ') {
+            new_word = true;
+        } else if (new_word) {
+            char lower_c = tolower(c);
+            letter_count[lower_c]++;
+            new_word = false;
+        }
+    }
+    char most_common_letter = ' ';
+    int max_count = 0;
+
+    for (const auto& entry : letter_count) {
+        if (entry.second > max_count) {
+            max_count = entry.second;
+            most_common_letter = entry.first;
+        }
+    }
+    return most_common_letter;
+}
+int main() {
+    string input;
+    getline(cin, input);
+
+    char m_common_starting_letter = most_letter(input);
+    cout << "Chastaya bukva: " << m_common_starting_letter << endl;
+
+    return 0;
+}
